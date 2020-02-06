@@ -27,12 +27,20 @@ export class App {
       this.profileService.loadUser(usernameInput.val()).then(
         response => {
           this.profileService.updateProfileView(response);
+          this.getEvents(usernameInput.val());
         }
       );
     } else {
       usernameInput.addClass('invalid');
     }
+  }
 
+  getEvents(username){
+    this.profileService.loadEvents(username).then(
+      events => {
+        this.profileService.updateHistoryView(events);
+      }
+    );
 
   }
 }
