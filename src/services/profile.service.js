@@ -1,18 +1,8 @@
-import {GITHUB_USER} from "../shared/api";
 import $ from "cash-dom";
+import {UtilsService} from "./utils.service";
 
 
 export class ProfileService {
-
-  loadUser(username) {
-    return fetch(`${GITHUB_USER}${username}`)
-      .then((response) => response.json())
-  }
-
-  loadEvents(username) {
-    return fetch(`${GITHUB_USER}${username}/events/public`)
-      .then((response) => response.json())
-  }
 
   updateProfileView(profile) {
     $('#profile-name').text($('.username.input').val())
@@ -28,17 +18,13 @@ export class ProfileService {
         const eventTemplate = this.getTemplateByEventType(events[i]);
         if (eventTemplate) {
           const template = this.getTemplate();
-          template.find('.heading').text(this.getFormatDate(events[i].created_at));
+          template.find('.heading').text(UtilsService.getParsedDate(events[i].created_at));
           template.find('.timeline-content').append(eventTemplate);
           content.append(template[0].innerHTML);
         }
       }
       $('#user-timeline').html(content.html());
     }
-  }
-
-  getTemplate() {
-    return $('#timeline-template').clone();
   }
 
   getTemplateByEventType(event) {
@@ -53,17 +39,14 @@ export class ProfileService {
   }
 
   getReviewCommentTemplate(event) {
-    const content = $('<div></div>').addClass('content');
-    const profileContainer = $('<span></span>').addClass('gh-username')
-      .append($('<img/>').attr('src', event.actor.avatar_url))
-      .append($('<a></a>').attr('href', event.actor.url).text(` ${event.actor.login} `));
-    const action = $('<a> comment </a>').attr('href', event.payload.comment.html_url);
-    const secondAction = $('<a> pull request </a>').attr('href', event.payload.comment.url);
-    const repo = $('<p></p>').addClass('repo-name')
-      .append($('<a></a>').attr('href', event.repo.url).text(` ${event.repo.name} `));
+    const content = this.getContent();
+    const profile = this.getProfile(event.actor);
+    const action = this.getAction('comment', event.payload.comment.html_url);
+    const secondAction = this.getAction('pull request', event.payload.comment.url);
+    const repo = this.getRepo(event.repo);
 
     return content
-      .append(profileContainer)
+      .append(profile)
       .append(event.payload.action)
       .append(action)
       .append(' to ')
@@ -72,25 +55,39 @@ export class ProfileService {
   }
 
   getPullRequestEventTemplate(event) {
-    const content = $('<div></div>').addClass('content');
-    const profileContainer = $('<span></span>').addClass('gh-username')
-      .append($('<img/>').attr('src', event.actor.avatar_url))
-      .append($('<a></a>').attr('href', event.actor.url).text(` ${event.actor.login} `));
-    const action = $('<a> pull request </a>').attr('href', event.payload.pull_request.url);
-    const repo = $('<p></p>').addClass('repo-name')
-      .append($('<a></a>').attr('href', event.repo.url).text(` ${event.repo.name} `));
+    const content = this.getContent();
+    const profile = this.getProfile(event.actor);
+    const action = this.getAction('pull request', event.payload.pull_request.url)
+    const repo = this.getRepo(event.repo);
 
     return content
-      .append(profileContainer)
+      .append(profile)
       .append(event.payload.action)
       .append(action)
       .append(repo);
   }
 
-  getFormatDate(isoDate) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date(isoDate);
-    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  getContent() {
+    return $('<div></div>').addClass('content');
+  }
+
+  getProfile(actor) {
+    return $('<span></span>').addClass('gh-username')
+      .append($('<img/>').attr('src', actor.avatar_url))
+      .append($('<a></a>').attr('href', actor.url).text(` ${actor.login} `));
+  }
+
+  getAction(name, href) {
+    return $(`<a> ${name} </a>`).attr('href', href);
+  }
+
+  getRepo(repo) {
+    return $('<p></p>').addClass('repo-name')
+      .append($('<a></a>').attr('href', repo.url).text(` ${repo.name} `))
+  }
+
+  getTemplate() {
+    return $('#timeline-template').clone();
   }
 
 

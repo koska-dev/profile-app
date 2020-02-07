@@ -1,8 +1,8 @@
 import {App} from "./app";
 import {ProfileService} from "./services/profile.service";
-import {UtilsService} from "./services/utils.service";
+import {ProfileRepository} from "./services/profile-repository.service";
 
 const profile = new ProfileService();
-const utils = new UtilsService();
-const app = new App(profile, utils);
+const profileRepository = new ProfileRepository();
+const app = new App(profile, profileRepository);
 app.initializeApp();

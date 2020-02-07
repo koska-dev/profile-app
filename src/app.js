@@ -4,12 +4,13 @@ import {polyfill} from 'es6-promise';
 
 polyfill();
 import "isomorphic-fetch";
+import {UtilsService} from "./services/utils.service";
 
 export class App {
 
-  constructor(profileService, utilsService) {
+  constructor(profileService, profileRepository) {
     this.profileService = profileService;
-    this.utilsService = utilsService;
+    this.profileRepository = profileRepository;
   }
 
   initializeApp() {
@@ -22,9 +23,9 @@ export class App {
 
   getUser(e) {
     const usernameInput = $('input#username');
-    if (!this.utilsService.isEmpty(usernameInput.val()) && this.utilsService.isCorrectUsername(usernameInput.val())) {
+    if (!UtilsService.isEmpty(usernameInput.val()) && UtilsService.isCorrectUsername(usernameInput.val())) {
       usernameInput.removeClass('invalid');
-      this.profileService.loadUser(usernameInput.val()).then(
+      this.profileRepository.loadUser(usernameInput.val()).then(
         response => {
           this.profileService.updateProfileView(response);
           this.getEvents(usernameInput.val());
@@ -36,7 +37,7 @@ export class App {
   }
 
   getEvents(username){
-    this.profileService.loadEvents(username).then(
+    this.profileRepository.loadEvents(username).then(
       events => {
         this.profileService.updateHistoryView(events);
       }
