@@ -1,6 +1,5 @@
 import {App} from "./app";
-import {ProfileService} from "./services/profile.service";
-import {ProfileRepository} from "./services/profile-repository.service";
+import {ProfileRepository, ProfileService} from "./services";
 
 const profile = new ProfileService();
 const profileRepository = new ProfileRepository();

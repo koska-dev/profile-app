@@ -3,15 +3,13 @@ const path = require('path'),
   CleanWebpackPlugin = require('clean-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   ExtractTextPlugin = require('extract-text-webpack-plugin');
-
 const extractPlugin = new ExtractTextPlugin({filename: './assets/css/app.css'});
 
 const config = {
-
   context: path.resolve(__dirname, 'src'),
 
   entry: {
-    app: './index.js'
+    app: './index.js',
   },
 
   output: {
@@ -29,7 +27,7 @@ const config = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ['env']
+            presets: ['env'],
           }
         }
       },
@@ -44,13 +42,13 @@ const config = {
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true
+                sourceMap: false
               }
             }, {
               loader: 'sass-loader',
               options: {
-                sourceMap: true
-              }
+                sourceMap: false
+              },
             }
           ],
           fallback: 'style-loader'
@@ -73,7 +71,7 @@ const config = {
         use: ['file-loader']
       }
 
-    ]
+    ],
   },
 
   plugins: [
