@@ -25,12 +25,15 @@ export class App {
     const usernameInput = $('input#username');
     if (!UtilsService.isEmpty(usernameInput.val()) && UtilsService.isCorrectUsername(usernameInput.val())) {
       usernameInput.removeClass('invalid');
+      this.profileService.setLoader(true);
       this.profileRepository.loadUser(usernameInput.val()).then(
         response => {
           this.profileService.updateProfileView(response);
           this.getEvents(usernameInput.val());
         }
-      );
+      ).catch(() => {
+        this.profileService.setLoader(false);
+      });
     } else {
       usernameInput.addClass('invalid');
     }
@@ -41,7 +44,9 @@ export class App {
       events => {
         this.profileService.updateHistoryView(events);
       }
-    );
+    ).finally(() => {
+      this.profileService.setLoader(false);
+    });
 
   }
 }

@@ -4,6 +4,12 @@ import {UtilsService} from "./utils.service";
 
 export class ProfileService {
 
+  constructor() {
+    this.profileContainer = $('.profile-container');
+    this.eventsContainer = $('.events-container');
+    this.spinner = $('#spinner');
+  }
+
   updateProfileView(profile) {
     $('#profile-name').text($('.username.input').val())
     $('#profile-image').attr('src', profile.avatar_url)
@@ -88,6 +94,18 @@ export class ProfileService {
 
   getTemplate() {
     return $('#timeline-template').clone();
+  }
+
+  setLoader(loading) {
+    if (loading) {
+      this.profileContainer.addClass('is-invisible');
+      this.eventsContainer.addClass('is-invisible');
+      this.spinner.removeClass('is-hidden');
+    } else {
+      this.profileContainer.removeClass('is-invisible');
+      this.eventsContainer.removeClass('is-invisible');
+      this.spinner.addClass('is-hidden');
+    }
   }
 
 
