@@ -1,0 +1,37 @@
+@charset "utf-8";
+@import "~bulma";
+@import "~bulma-timeline";
+
+.navbar {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 8px;
+}
+
+.gh-username img {
+  width: 32px;
+  vertical-align: middle;
+}
+
+#profile-bio {
+  margin-top: 10px;
+}
+
+.timeline .timeline-item {
+  padding-bottom: 1em;
+}
+
+#username.invalid {
+  border: 1px solid red;
+}
+
+#timeline-template {
+  display: none;
+}
+
+.profile-container {
+  width: 30%;
+  flex: none;
+  @media(max-width: 1279px){
+    width: 50%;
+  }
+}
